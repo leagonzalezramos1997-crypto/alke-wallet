@@ -1,0 +1,37 @@
+body {background-color:rgb(22, 139, 236);}
+ Para móviles muy pequeños */
+            @media (max-width: 576px) {
+                .card-body {
+                    padding: 1.5rem;
+                }
+                
+                .login-card {
+                    width: 95%;
+                    margin: 0 10px;
+                }
+                
+                h4 {
+                    font-size: 1.25rem;
+                }
+            }
+            
+            /* Para tablets */
+            @media (min-width: 577px) and (max-width: 768px) {
+                .login-card {
+                    max-width: 450px;
+                    width: 85%;
+                }
+            }
+            
+            /* Para landscape en móviles */
+            @media (max-height: 600px) and (orientation: landscape) {
+                .row {
+                    min-height: auto;
+                    padding: 20px 0;
+                }
+                
+                .login-card {
+                    max-height: 90vh;
+                    overflow-y: auto;
+                }
+            }
