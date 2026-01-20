@@ -4,65 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Alke Wallet Menu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>placeholder</h1>
     <div class="app-container d-flex">
-    <button class="toggle-btn-mobile" id="toggleBtnmobile">
-            <i class="bi bi-arrow-left-circle"></i>
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                 <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
-            </svg>
-    </button>      
     <div class="overlay" id="overlay"></div>
     <nav class="sidebar " id="sidebar"> 
-         <button class="toggle-Btn" id="toggleBtn">
-            <i class="bi bi-arrow-left-circle"></i>
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                 <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
-            </svg>
-         </button>        
+        <div class="toggle-container">
+        <button class="toggle-Btn" id="toggleBtn">
+            <i class="bi bi-arrow-left-circle-fill"></i>
+        </button>
+        </div>        
         <div class="logo-container">
-            <div class="logo-text">Alke Wallet</div>
-            <div class="logo-mini">AW</div>
+            <img src="./icons/logo.svg" alt="Logo Alke Wallet" class="logo">
         </div>
         <ul class="nav-menu">
-            <li class="nav-item">
+            <li class="nav-item" >
                 <a href="./menu.html" class="nav-link">
-                    <img src="./icons/cartera.svg" alt="Icono de banco" width="30" height="30">
+                    <img src="./icons/cartera.svg" alt="Icono de banco" width="30" height="30" class="nav-logo">
                     <span class="link-text"style="margin-left: 6px";>Cartera</span>
                     </a>
             </li>
-            <li class="nav-item">
-                <a href="../../deposit.html" class="nav-link">
-                    <img src="./icons/deposit.svg" alt="Icono de deposito" width="30" height="30" style="margin-left: 3px;">
+            <li class="nav-item" >
+                <a href="../../../alke-wallet-1/feature/depositos/deposit.html" class="nav-link">
+                    <img src="./icons/deposit.svg" alt="Icono de deposito" width="30" height="30" style="margin-left: 3px;" class="nav-logo">
                     <span class="link-text" style="margin-left: 3px;">Depositar</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="./sendmoney.html" class="nav-link">
-                    <img src="./icons/transferencia.svg" alt="Icono de enviar dinero" width="30" height="30">
+            <li class="nav-item" >
+                <a href="../../../alke-wallet-1/feature/depositos/sendmoney.html" class="nav-link">
+                    <img src="./icons/transferencia.svg" alt="Icono de enviar dinero" width="30" height="30" class="nav-logo">
                     <span class="link-text" style="margin-left: 6px";>Transferir</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="./transactions.html" class="nav-link">
-                    <img src="./icons/transacciones.svg" alt="Icono de transacciones" width="30" height="30">
+            <li class="nav-item" >
+                <a href="../../../alke-wallet-1/feature/transacciones/transactions.html" class="nav-link">
+                    <img src="./icons/transacciones.svg" alt="Icono de transacciones" width="30" height="30" class="nav-logo">
                     <span class="link-text"style="margin-left: 6px">Historial</span>
                 </a>
             </li>
         </ul>
     </nav>
-    <main class="main-content">
-    </main>
+        <main class="main-content">
+            <div class="content-body">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Balance Actual</h5>
+                        <h2 class="card-text" id="balanceDisplay">$ 0</h2>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>   
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        
         const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('toggleBtn');
+        const toggleBtn = document.getElementById('toggleBtn')
+        const navitem = document.querySelectorAll('.nav-item');
 
         //estado inicial
         
@@ -74,13 +76,43 @@
         isCollapsed = !isCollapsed;
 
             if (isCollapsed) {
-                sidebar.classList.add('collapsed'); } 
+                sidebar.classList.add('collapsed'); 
+                toggleBtn.querySelector('i').classList.replace('bi-arrow-left-circle-fill', 'bi-arrow-right-circle-fill');
+                navitem.forEach( item => {
+                    item.classList.add('collapsed');})    
+          }   
+            
             else {
-                sidebar.classList.remove('collapsed');}
-        
+                sidebar.classList.remove('collapsed');
+                toggleBtn.querySelector('i').classList.replace('bi-arrow-right-circle-fill', 'bi-arrow-left-circle-fill');
+                navitem.     forEach( item => {
+                    item.classList.remove('collapsed');})
+            }
+
             localStorage.setItem('sidebarCollapsed', isCollapsed);
-        });
-        
+        });      
     </script>
+    <script>
+    $(document).ready(function() {
+    // Función para actualizar balance
+    function actualizarBalance() {
+        const balance = localStorage.getItem('balanceAlkeWallet') || '0';
+        $('#balanceDisplay').text('$ ' + parseFloat(balance).toFixed(2));
+    }
+    
+    // Cargar balance inicial
+    actualizarBalance();
+    
+    // Escuchar cambios en tiempo real
+    $(window).on('storage', function(e) {
+        if (e.originalEvent.key === 'balanceAlkeWallet') {
+            actualizarBalance();
+        }
+    });
+    
+    // También actualizar cada vez que se carga la página
+    $(window).on('load', actualizarBalance);
+});
+   </script> 
 </body>
 </html>

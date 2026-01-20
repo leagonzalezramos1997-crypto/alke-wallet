@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depositar - Alke Wallet</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../main/menu/styles.css"> <!-- Ruta corregida -->
+</head>
+<body>
+    <div class="app-container d-flex">
+        <div class="overlay" id="overlay"></div>
+        <nav class="sidebar" id="sidebar"> 
+            <div class="toggle-container">
+                <button class="toggle-Btn" id="toggleBtn">
+                    <i class="bi bi-arrow-left-circle-fill"></i>
+                </button>
+            </div>        
+            <div class="logo-container">
+                <img src="../../main/menu/icons/logo.svg" alt="Logo Alke Wallet" class="logo">
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="../../main/menu/menu.html" class="nav-link">
+                        <img src="../../main/menu/icons/cartera.svg" alt="Icono de banco" width="30" height="30" class="nav-logo">
+                        <span class="link-text" style="margin-left: 6px;">Cartera</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../../feature/depositos/deposit.html" class="nav-link active">
+                        <img src="../../main/menu/icons/deposit.svg" alt="Icono de deposito" width="30" height="30" style="margin-left: 3px;" class="nav-logo">
+                        <span class="link-text" style="margin-left: 3px;">Depositar</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../../feature/depositos/sendmoney.html" class="nav-link">
+                        <img src="../../main/menu/icons/transferencia.svg" alt="Icono de enviar dinero" width="30" height="30" class="nav-logo">
+                        <span class="link-text" style="margin-left: 6px;">Transferir</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../transacciones/transactions.html" class="nav-link">
+                        <img src="../../main/menu/icons/transacciones.svg" alt="Icono de transacciones" width="30" height="30" class="nav-logo">
+                        <span class="link-text" style="margin-left: 6px;">Historial</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <div class="content-header">
+                 <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Últimos depósitos</h5>
+                <div class="table-responsive">
+                    <table class="table" id="depositHistory">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Monto</th>
+                                <th>Método</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Se llenará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggleBtn')
+        const navitem = document.querySelectorAll('.nav-item');
+
+        //estado inicial
+        
+        let isCollapsed = false;
+        toggleBtn.addEventListener('click', function() {
+        
+            // Alternar estado
+
+        isCollapsed = !isCollapsed;
+
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed'); 
+                toggleBtn.querySelector('i').classList.replace('bi-arrow-left-circle-fill', 'bi-arrow-right-circle-fill');
+                navitem.forEach( item => {
+                    item.classList.add('collapsed');})    
+          }   
+            
+            else {
+                sidebar.classList.remove('collapsed');
+                toggleBtn.querySelector('i').classList.replace('bi-arrow-right-circle-fill', 'bi-arrow-left-circle-fill');
+                navitem.     forEach( item => {
+                    item.classList.remove('collapsed');})
+            }
+
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+        });      
+    </script>
+    <script>
+$(document).ready(function() {
+    // Claves para localStorage
+    const CLAVE_BALANCE = 'balanceAlkeWallet';
+    const CLAVE_HISTORIAL = 'historialTransferencias';
+    
+    // Función para formatear fecha
+    function formatearFecha(fechaISO) {
+        const fecha = new Date(fechaISO);
+        return fecha.toLocaleDateString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+    
+    // Cargar historial de transferencias
+    function cargarHistorial() {
+        const historial = JSON.parse(localStorage.getItem(CLAVE_HISTORIAL) || '[]');
+        const $tbody = $('#depositHistory tbody');
+        $tbody.empty();
+        
+        if (historial.length === 0) {
+            $tbody.html(`
+                <tr>
+                    <td colspan="4" class="text-center text-muted">
+                        <i class="bi bi-clock-history"></i>
+                        No hay transacciones registradas
+                    </td>
+                </tr>
+            `);
+            return;
+        }
+        
+        // Ordenar por fecha (más reciente primero)
+        historial.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        
+        historial.slice(0, 10).forEach(transaccion => {
+            const fechaFormateada = formatearFecha(transaccion.fecha);
+            const tipoTransaccion = transaccion.tipo === 'envío' ? 'Transferencia' : 'Depósito';
+            const icono = transaccion.tipo === 'envío' ? 
+                '<i class="bi bi-arrow-up text-danger"></i>' : 
+                '<i class="bi bi-arrow-down text-success"></i>';
+            
+            $tbody.append(`
+                <tr>
+                    <td>${fechaFormateada}</td>
+                    <td>${icono} $${transaccion.monto.toFixed(2)}</td>
+                    <td>${tipoTransaccion}</td>
+                    <td>
+                        <span class="badge ${transaccion.tipo === 'envío' ? 'badge-warning' : 'badge-success'}">
+                            ${transaccion.tipo === 'envío' ? 'Enviado' : 'Recibido'}
+                        </span>
+                    </td>
+                </tr>
+            `);
+        });
+    }
+    
+    // Cargar balance actual
+    function cargarBalance() {
+        const balance = localStorage.getItem(CLAVE_BALANCE) || '0';
+        $('#balanceActual').text('$' + parseFloat(balance).toFixed(2));
+    }
+    
+    // Inicializar
+    cargarHistorial();
+    cargarBalance();
+    
+    // Actualizar cuando haya cambios en localStorage
+    $(window).on('storage', function(e) {
+        if (e.originalEvent.key === CLAVE_HISTORIAL || e.originalEvent.key === CLAVE_BALANCE) {
+            cargarHistorial();
+            cargarBalance();
+        }
+    });
+});
+</script>
+
+</body>
